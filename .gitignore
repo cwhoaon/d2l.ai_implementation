@@ -1,3 +1,9 @@
+#for github commit
+github_commit.ipynb
+
+#ipynb
+.ipynb_checkpoints
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
