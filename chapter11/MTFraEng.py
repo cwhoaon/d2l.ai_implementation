@@ -4,7 +4,7 @@ from torch.utils.data import Dataset, DataLoader
 from torchtext.vocab import build_vocab_from_iterator
 
 class MTFraEng(Dataset):
-    def __init__(self, path, train=True, num_steps=9, num_train=512, num_test=128):
+    def __init__(self, path, train=True, num_steps=9, num_train=512, num_val=128):
         super(MTFraEng, self).__init__()
 
         self.num_steps = num_steps
@@ -14,7 +14,7 @@ class MTFraEng(Dataset):
         src, tgt = self._tokenize(text)
 
         arrays, self.src_vocab, self.tgt_vocab = self._build_arrays(src, tgt)
-        src, tgt, label, src_valid_len = arrays
+        src, tgt, src_valid_len, label = arrays
 
         if train:
             self.src = src[:num_train]
@@ -22,13 +22,13 @@ class MTFraEng(Dataset):
             self.label = label[:num_train]
             self.src_valid_len = src_valid_len[:num_train]
         else:
-            self.src = src[num_train:num_train+num_test]
-            self.tgt = tgt[num_train:num_train+num_test]
-            self.label = label[num_train:num_train+num_test]
-            self.src_valid_len = src_valid_len[num_train:num_train+num_test]
+            self.src = src[num_train:num_train+num_val]
+            self.tgt = tgt[num_train:num_train+num_val]
+            self.label = label[num_train:num_train+num_val]
+            self.src_valid_len = src_valid_len[num_train:num_train+num_val]
 
     def __getitem__(self, index):
-        return (self.src[index], self.tgt[index]), self.label[index], self.src_valid_len[index]
+        return self.src[index], self.tgt[index], self.src_valid_len[index], self.label[index]
 
     def __len__(self):
         return len(self.src)
@@ -74,7 +74,7 @@ class MTFraEng(Dataset):
 
         src_array, src_vocab, src_valid_len = _build_array(src, src_vocab)
         tgt_array, tgt_vocab, _ = _build_array(tgt, tgt_vocab, is_tgt=True)
-        return (src_array, tgt_array[:,:-1], tgt_array[:,1:], src_valid_len), src_vocab, tgt_vocab
+        return (src_array, tgt_array[:,:-1], src_valid_len, tgt_array[:,1:]), src_vocab, tgt_vocab
     
     def build(self, src_sentences, tgt_sentences):
         raw_text = '\n'.join([src + '\t' + tgt for src, tgt in zip(src_sentences, tgt_sentences)])

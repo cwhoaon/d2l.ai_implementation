@@ -10,7 +10,7 @@ class AttentionEncoderDecoder(nn.Module):
 
     def forward(self, enc_X, dec_X, enc_valid_lens):
         enc_outputs = self.encoder(enc_X)
-        return self.decoder(dec_X, enc_outputs, enc_valid_lens)
+        return self.decoder(dec_X, enc_outputs, enc_valid_lens)[0]
     
     def predict(self, src, src_valid_len, tgt_vocab, num_steps, device):
         src = src.to(device)

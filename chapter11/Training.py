@@ -5,10 +5,10 @@ def train_run_epoch(model, device, train_loader, optimizer, loss_fn):
     model.train()
     total_loss = 0
 
-    for (src, tgt), label, src_valid_len in train_loader:
+    for src, tgt, src_valid_len, label in train_loader:
         src, tgt, label, src_valid_len = src.to(device), tgt.to(device), label.to(device), src_valid_len.to(device)
 
-        outputs, hidden = model(src, tgt, src_valid_len)
+        outputs = model(src, tgt, src_valid_len)
 
         output = outputs.reshape(-1, outputs.size()[2])
         label = label.flatten()
@@ -30,10 +30,10 @@ def test_run_epoch(model, device, test_loader, loss_fn):
     model.eval()
     total_loss = 0
 
-    for (src, tgt), label, src_valid_len in test_loader:
+    for src, tgt, src_valid_len, label in test_loader:
         src, tgt, label, src_valid_len = src.to(device), tgt.to(device), label.to(device), src_valid_len.to(device)
 
-        outputs, hidden = model(src, tgt, src_valid_len)
+        outputs = model(src, tgt, src_valid_len)
 
         output = outputs.reshape(-1, outputs.size()[2])
         label = label.flatten()
