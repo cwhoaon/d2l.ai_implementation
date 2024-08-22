@@ -5,7 +5,7 @@ github_commit.ipynb
 .ipynb_checkpoints
 
 #data folder
-Datasets
+datasets
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
